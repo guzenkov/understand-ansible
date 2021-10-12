@@ -1,0 +1,40 @@
+#The play has three tasks t1 t2 t3
+#Task2 is a block with three tasks b1 b2 b3, a rescue block with r1 r2 r3, and an always block with a1 a2 a3.
+#You can make any of the tasks fail by declaring a corresponding variable when you run it. For example, to make second task in block and second task in rescue fail:
+#ansible-playbook block.yaml -e b2= -e r2=
+- hosts: localhost
+  become: false
+  gather_facts: false
+  tasks:
+  - name: task1 before block
+    command: date
+    failed_when: t1 is defined
+  - name: task2 - the block
+    block:
+    - name: task1 in the block
+      command: date
+      failed_when: b1 is defined
+    - name: task2 in the block
+      command: date
+      failed_when: b2 is defined
+    - name: task3 in the block
+      command: date
+      failed_when: b3 is defined
+    rescue:
+    - name: task1 in the rescue block
+      command: date
+      failed_when: r1 is defined
+    - name: task2 in the rescue block
+      command: date
+      failed_when: r2 is defined
+    always: 
+    - name: task1 in the always block
+      command: date
+      failed_when: a1 is defined
+    - name: task2 in the always block
+      command: date
+      failed_when: a2 is defined
+  - name: task3 - after the block
+    command: date
+    failed_when: t3 is defined
+
