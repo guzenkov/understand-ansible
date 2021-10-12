@@ -1,0 +1,19 @@
+- hosts: localhost
+  gather_facts: no
+  become: false
+  tasks:
+  - name: first task notifies handler-b 
+    command: date
+    notify: handler-b
+  - name: second task notifies handler-a
+    command: date
+    notify: handler-a
+  handlers:
+  - name: handler-a
+    debug:
+      msg: Hi, I am handler-a, the first handler in the handlers section
+  - name: handler-b
+    debug:
+      msg: Hi, I am handler-b, the second handler in the handlers section
+
+    
